@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script>
+//打开就播放
+function loadPlay()
+{
+ try{
+ setColor(0); 
+ document.WMP.URL=MusicList.options[0].value; //指定(播放)列表中的第一首歌曲
+document.WMP.controls.play(); //播放
+}catch(e){}
+
+ //try{}catch(e){}表示忽略程序运行中出现的错误
+}
+
+//以下函数获取当前播放歌曲在列表中的索引
+function getMusicIndex()
+{
+ try{
+ var MusicIndex=0; //存储当前播放歌曲的位置
+/*
+遍历整个播放列表.
+获取当前播放歌曲在列表中的下标位置
+ 用document.WMP.URL来和列表项的值比较
+*/
+for(i=0;i<MusicList.length;i++)
+ {
+ if(document.WMP.URL==document.all.MusicList.options[i].value)
+ { 
+ MusicIndex=i; //记录下当前播放歌曲的位置
+break;
+ } 
+ }
+ return MusicIndex; //整个函数返回当前播放歌曲的下标位置
+}catch(e){}
+ setTimeout('getMusicIndex()',1000); //每隔1秒就检测一下当前播放歌曲的位置
+}
+getMusicIndex(); //调用getMusicIndex()函数
+
+//设置当前播放与不播放的歌曲的颜色
+function setColor(me)
+{
+ for(i=0;i<MusicList.length;i++)
+ {
+ MusicList.options[i].style.color="purple";
+ if(i==me)
+ { 
+ MusicList.options[i].style.color="green"; 
+ continue;
+ } 
+ }
+}
+//播放上一曲
+function playPrevious()
+{
+ try{
+ var PlayIndex=getMusicIndex(); //将当前播放歌曲的位置存储到PlayIndex变量中
+PlayIndex--; //当前播放歌曲的位置-1就表示起上一曲的位置
+setColor(PlayIndex);
+ document.WMP.URL=MusicList.options[PlayIndex].value;
+ document.WMP.controls.play(); 
+ }catch(e){}
+}
+//播放下一曲
+function playNext()
+{
+ try{
+ var PlayIndex=getMusicIndex(); //将当前播放歌曲的位置存储到PlayIndex变量中
+PlayIndex++; //当前播放歌曲的位置+1就表示起下一曲的位置
+setColor(PlayIndex);
+ document.WMP.URL=MusicList.options[PlayIndex].value;
+ document.WMP.controls.play(); 
+ }catch(e){}
+}
+//控制播放,暂停,停止
+function control(me)
+{
+ switch (me)
+ {
+ case 1 : //暂停
+document.WMP.controls.pause();
+ break;
+ case 2 : //播放
+document.WMP.controls.play();
+ break; 
+ case 0 : //停止
+document.WMP.controls.stop();
+ break; 
+ }
+}
+</script>
+</head>
+<body onload="loadPlay()">
+<object id="WMP" classid="clsid:6BF52A52-394A-11D3-B153-00C04F79FAA6" width="232" height="200" loop=-1> 
+<param name="URL">
+<param name="uiMode" value="none"><!-- none,mini,full -->
+<param name="enableContextMenu" value="false">
+</object>
+<br>
+<button onclick="control(2)">播放</button>
+<button onclick="control(1)">暂停</button>
+<button onclick="control(0)">停止</button>
+<button onclick="playPrevious()">上一曲</button>
+<button onclick="playNext()">下一曲</button>
+<br>
+<select id="MusicList" multiple>
+<option value="http://down.5458.net/yenja/zy/jwys.mp3">水木年华--借我一生
+<option value="http://media3.91vc.com/vc0912/space/2007/05/16/cyzhuiyue/1560247_20070517004036.mp3">水木年华--少年往事
+<option value="http://www.m8cool.com/UserFiles/BbsAttachments/2007072219356718750-29B4.mp3">水木年华--别哭,我最爱的人
+</select>
+<p>
+</body>
+</html>爱你无限七七
